@@ -1,18 +1,24 @@
-import { NgModule } from '@angular/core';
+import { ApplicationRef, DoBootstrap, Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { createCustomElement } from '@angular/elements';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule],
   providers: [],
-  bootstrap: [AppComponent]
+  // bootstrap: [AppComponent],
+  // entryComponents: [AppComponent],
 })
-export class AppModule { }
+export class AppModule implements DoBootstrap {
+  constructor(private injector: Injector) {}
+
+  ngDoBootstrap(appRef: ApplicationRef): void {
+    const element = createCustomElement(AppComponent, {
+      injector: this.injector,
+    });
+
+    customElements.define('web-comp-one', element);
+  }
+}
